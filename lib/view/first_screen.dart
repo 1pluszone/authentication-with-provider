@@ -23,22 +23,12 @@ class MyApp extends StatelessWidget {
 }
 
 class FirstScreen extends StatelessWidget {
+  UserProvider userProvider;
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of(context);
+    userProvider = Provider.of<UserProvider>(context);
     // final userProvider = context.read<UserProvider>();
-    switch (userProvider.loggedInStatus) {
-      case LoggedInStatus.loggedIn:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => BlogListScreen()));
-        break;
-      case LoggedInStatus.loggedIn:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginScreen()));
-        break;
-      case LoggedInStatus.unknown:
-        return Scaffold(body: Container(color: Colors.redAccent));
-    }
-    return SizedBox();
+    userProvider.checkLoginStatus(context);
+    return Scaffold(body: Container(color: Colors.redAccent));
   }
 }
