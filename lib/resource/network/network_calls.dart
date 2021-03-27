@@ -26,7 +26,14 @@ class ApiCalls {
   Future<http.Response> loadAllBlogs() async {
     final url = Uri.parse(EndPoints.getBlogs);
     final header = await getHeader();
-    final response = await http.post(url, headers: header);
+    final response = await http.get(url, headers: header);
+    return response;
+  }
+
+  Future<http.Response> loadABlog(String id) async {
+    final url = Uri.parse("${EndPoints.getBlogs}/$id");
+    final header = await getHeader();
+    final response = await http.get(url, headers: header);
     return response;
   }
 }

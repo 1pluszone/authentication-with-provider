@@ -48,6 +48,11 @@ class UserProvider with ChangeNotifier {
       status = LoggedInStatus.loggedOut;
     }
   }
+
+  void logout() {
+    final userPref = UserPreference();
+    userPref.changeLoginStatus(false);
+  }
 }
 
 enum LoggedInStatus { unknown, loggedIn, loggedOut }

@@ -7,17 +7,15 @@ class LoginScreen extends StatelessWidget {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  UserProvider _provider;
-
   @override
   Widget build(BuildContext context) {
-    _provider = Provider.of<UserProvider>(context);
+    UserProvider _provider = Provider.of<UserProvider>(context);
     return Scaffold(
-      body: SafeArea(child: loginWidget(context)),
+      body: SafeArea(child: loginWidget(context, _provider)),
     );
   }
 
-  Widget loginWidget(BuildContext context) {
+  Widget loginWidget(BuildContext context, UserProvider _provider) {
     return Center(
       child: Form(
         key: _loginFormKey,
@@ -25,7 +23,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             emailField(),
             passwordField(),
-            loginButton(context),
+            loginButton(context, _provider),
           ],
         ),
       ),
@@ -38,6 +36,8 @@ class LoginScreen extends StatelessWidget {
         validator: (String value) {
           if (value.isEmpty) {
             return "Please put in your email";
+          } else if (!value.contains("@")) {
+            return "please put in a valid email";
           }
           return null;
         });
@@ -49,12 +49,14 @@ class LoginScreen extends StatelessWidget {
         validator: (String value) {
           if (value.isEmpty) {
             return "Please put in your password";
+          } else if (value.length < 5) {
+            return "password must be greater than 4";
           }
           return null;
         });
   }
 
-  Widget loginButton(BuildContext context) {
+  Widget loginButton(BuildContext context, UserProvider _provider) {
     return ElevatedButton(
       child: Text("Login"),
       onPressed: () => _provider.login(
