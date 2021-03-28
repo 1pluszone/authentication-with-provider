@@ -12,10 +12,12 @@ class UserProvider with ChangeNotifier {
 
   final _api = ApiCalls();
 
-  void checkLoginStatus(BuildContext context) async {
-    final userPref = UserPreference();
+  static const loginScreenRoute = "loginScreen";
+  static const blogListRoute = "blogListScreen";
 
-    bool loggedInStatus = await userPref.checkLoginStatus();
+  void checkLoginStatus(BuildContext context) async {
+    final userPref = await UserPreference.getInstance();
+    bool loggedInStatus = userPref.checkLoginStatus();
     if (loggedInStatus) {
       status = LoggedInStatus.loggedIn;
       Navigator.push(
@@ -25,7 +27,6 @@ class UserProvider with ChangeNotifier {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginScreen()));
     }
-    // notifyListeners();
   }
 
   Future<void> login(
@@ -35,23 +36,22 @@ class UserProvider with ChangeNotifier {
       final responseData = json.decode(response.body);
       TokenModel tokenModel = TokenModel.fromJson(responseData);
       String token = tokenModel.token;
-      final userPref = UserPreference();
+      final userPref = await UserPreference.getInstance();
       userPref.saveToken(token);
       userPref.changeLoginStatus(true);
-//dismiss rolling
-      //move to blog list screen
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => BlogListScreen()));
+      Navigator.of(context).pushReplacementNamed(blogListRoute);
     } catch (e) {
-      //dismiss rolling
       print("an error occured on login $e");
       status = LoggedInStatus.loggedOut;
     }
   }
 
-  void logout() {
-    final userPref = UserPreference();
-    userPref.changeLoginStatus(false);
+  void logout(BuildContext context) async {
+    final userPref = await UserPreference.getInstance();
+    userPref.clearAll();
+
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        loginScreenRoute, (Route<dynamic> route) => false);
   }
 }
 

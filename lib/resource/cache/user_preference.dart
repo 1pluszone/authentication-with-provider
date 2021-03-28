@@ -4,10 +4,10 @@ class UserPreference {
   static const checkLoginString = "loggedInstatus";
   static const tokenString = "token";
 
-  UserPreference({this.preferences});
-
   static UserPreference instance;
   SharedPreferences preferences;
+
+  UserPreference({this.preferences});
 
   static Future<UserPreference> getInstance() async {
     if (instance != null) {
@@ -18,27 +18,23 @@ class UserPreference {
     }
   }
 
-  Future<bool> checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool loggedInstatus = prefs.getBool(checkLoginString) ?? false;
-
-    return loggedInstatus;
+  bool checkLoginStatus() {
+    return preferences.getBool(checkLoginString) ?? false;
   }
 
-  Future<void> changeLoginStatus(bool newValue) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(checkLoginString, newValue);
+  void changeLoginStatus(bool newValue) {
+    preferences.setBool(checkLoginString, newValue);
   }
 
-  Future<String> getSavedToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString(tokenString);
-
-    return token;
+  String getSavedToken() {
+    return preferences.getString(tokenString);
   }
 
-  Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(tokenString, token);
+  void saveToken(String token) {
+    preferences.setString(tokenString, token);
+  }
+
+  void clearAll() {
+    preferences.clear();
   }
 }

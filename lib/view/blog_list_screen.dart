@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:after_layout/after_layout.dart';
 
+import 'widgets/screen_drawer.dart';
+
 class BlogListScreen extends StatefulWidget {
   @override
   _BlogListScreenState createState() => _BlogListScreenState();
@@ -16,7 +18,7 @@ class _BlogListScreenState extends State<BlogListScreen>
   @override
   Widget build(BuildContext context) {
     _blogsProvider = Provider.of<BlogsProvider>(context);
-    return Scaffold(body: blogPage(context));
+    return Scaffold(drawer: ScreenDrawer(), body: blogPage(context));
   }
 
   Widget blogPage(BuildContext context) {

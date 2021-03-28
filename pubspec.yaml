@@ -33,6 +33,7 @@ dependencies:
   http: ^0.13.1
   after_layout: ^1.1.0
   connectivity: ^3.0.3
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
