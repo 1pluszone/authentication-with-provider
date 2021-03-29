@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 
 class ApiCalls {
   Future<Map<String, String>> getHeader() async {
-    final token = await UserPreference().getSavedToken();
+    final userPref = await UserPreference.getInstance();
+    final token = userPref.getSavedToken();
 
     final header = {
       HttpHeaders.contentTypeHeader: 'application/json',

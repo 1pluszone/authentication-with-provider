@@ -50,7 +50,7 @@ class _EachBlogState extends State<EachBlog> with AfterLayoutMixin<EachBlog> {
               placeholder: "assets/loading.gif", image: blog.imageUrl),
           SizedBox(height: 20),
           Text(blog.title),
-          Text(blog.createdAt),
+          Text(BlogModel.formatter.format(DateTime.parse(blog.createdAt))),
         ],
       ),
     );

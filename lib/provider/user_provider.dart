@@ -19,7 +19,6 @@ class UserProvider with ChangeNotifier {
     final userPref = await UserPreference.getInstance();
     bool loggedInStatus = userPref.checkLoginStatus();
     if (loggedInStatus) {
-      status = LoggedInStatus.loggedIn;
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => BlogListScreen()));
     } else {
@@ -32,6 +31,8 @@ class UserProvider with ChangeNotifier {
   Future<void> login(
       String email, String password, BuildContext context) async {
     try {
+      status = LoggedInStatus.loading;
+      notifyListeners();
       final response = await _api.login(email, password);
       final responseData = json.decode(response.body);
       TokenModel tokenModel = TokenModel.fromJson(responseData);
@@ -42,7 +43,12 @@ class UserProvider with ChangeNotifier {
       Navigator.of(context).pushReplacementNamed(blogListRoute);
     } catch (e) {
       print("an error occured on login $e");
+      final snackBar = SnackBar(
+        content: Text("An error occured, we were unable to log you in $e"),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       status = LoggedInStatus.loggedOut;
+      notifyListeners();
     }
   }
 
@@ -55,4 +61,4 @@ class UserProvider with ChangeNotifier {
   }
 }
 
-enum LoggedInStatus { unknown, loggedIn, loggedOut }
+enum LoggedInStatus { unknown, loading, loggedOut }

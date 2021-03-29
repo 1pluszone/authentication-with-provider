@@ -1,4 +1,5 @@
 import 'package:authentication_app_with_provider/provider/blogs_provider.dart';
+import 'package:authentication_app_with_provider/resource/models/blog_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:after_layout/after_layout.dart';
@@ -15,10 +16,23 @@ class _BlogListScreenState extends State<BlogListScreen>
   BlogsProvider _blogsProvider;
   static const String eachBlogRoute = "eachBlogScreen";
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     _blogsProvider = Provider.of<BlogsProvider>(context);
-    return Scaffold(drawer: ScreenDrawer(), body: blogPage(context));
+    return WillPopScope(
+        onWillPop: () => _blogsProvider.onBackPressed(context),
+        child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+                title: Text("Blog List"),
+                centerTitle: true,
+                leading: IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: () => _scaffoldKey.currentState.openDrawer())),
+            drawer: ScreenDrawer(),
+            body: blogPage(context)));
   }
 
   Widget blogPage(BuildContext context) {
@@ -49,9 +63,10 @@ class _BlogListScreenState extends State<BlogListScreen>
                         child: Image.network(
                             _blogsProvider.blogs[index].imageUrl))),
                 title: Text(_blogsProvider.blogs[index].title),
-                subtitle: Text(_blogsProvider.blogs[index].createdAt),
+                subtitle: Text(BlogModel.formatter.format(
+                    DateTime.parse(_blogsProvider.blogs[index].createdAt))),
                 onTap: () => Navigator.of(context).pushNamed(eachBlogRoute,
-                    arguments: _blogsProvider.blogs[index]),
+                    arguments: _blogsProvider.blogs[index].id),
               ),
             ));
   }

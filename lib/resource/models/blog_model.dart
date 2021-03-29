@@ -11,12 +11,21 @@ class BlogModel {
   static final DateFormat formatter = DateFormat('MMMM dd, yyyy : hh mm ss');
 
   factory BlogModel.fromJson(Map<String, dynamic> json) {
-    String date = formatter.format(DateTime.parse(json['createdAt'] as String));
     return BlogModel(
       id: json['id'] as String,
-      createdAt: date,
+      createdAt: json['createdAt'] as String,
       title: json['title'] as String,
       imageUrl: json['imageUrl'] as String,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['createdAt'] = this.createdAt;
+    data['title'] = this.title;
+    data['imageUrl'] = this.imageUrl;
+
+    return data;
   }
 }
